@@ -29,3 +29,4 @@ def reading(filepath: str, columns):
 
 if __name__ == '__main__':
     test = reading(filepath="test.csv", columns=['column 1'])
+    print(test)
