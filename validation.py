@@ -1,4 +1,33 @@
 from abc import ABC, abstractmethod
+from re import sub
+
+
+'''
+    camel_case
+
+Function to convert a string into a camel case style string. This removes spaces,
+-, and _. And formats the capitals of the words into camel case. E.g.
+
+    foo-bar => fooBar
+    foo bar => fooBar
+    Foo_Bar => fooBar
+'''
+def camel_case(string):
+    string = sub(r"(_|-)+", " ", string).title().replace(" ", "")
+    return ''.join([string[0].lower(), string[1:]])
+
+
+'''
+    normalise
+
+Function to convert a string into a normalised string. This removes all non-letter
+non-number characters from the string. E.g.
+
+this is-a string @swell & so is th1s => this isa string swell  so is ths
+
+'''
+def normalise(string):
+    return sub(r"[^a-z0-9]", "", string.lower())
 
 
 class Validator(ABC):
@@ -33,3 +62,25 @@ class Number(Validator):
             raise ValueError(
                 f'Expected {value!r} to be no more than {self.maxvalue!r}'
             )
+
+
+class String(Validator):
+    def __init__(self, case=None):
+        self.case = case
+
+    def validate(self, value):
+        if not isinstance(value, String):
+            raise TypeError(f"Expected {value!r} to be a String")
+        match self.case:
+            case "lower":
+                if value.lower() != value:
+                    raise ValueError(f"Expected {value!r} to be all lower case.")
+            case "upper":
+                if value.upper() != value:
+                    raise ValueError(f"Expected {value!r} to be all upper case.")
+            case "camel":
+                if camel_case(value) != value:
+                    raise ValueError(f"Expected {value!r} to be camel case.")
+            case "normalised":
+                if normalise(value) != value:
+                    raise ValueError(f"Expected {value!r} to be a normalised string.")
