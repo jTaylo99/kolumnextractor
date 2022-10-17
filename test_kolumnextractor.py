@@ -1,6 +1,6 @@
 import unittest
 
-from main import reading
+from kolumnextractor import reading
 
 class TestMain(unittest.TestCase):
 	def test01(self):
