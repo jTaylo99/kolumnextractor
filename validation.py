@@ -3,16 +3,20 @@ from re import sub
 from inflection import camelize
 
 
-'''
-    normalise
-
-Function to convert a string into a normalised string. This removes all non-letter
-non-number characters from the string. E.g.
-
-this is-a string @swell & so is th1s => thisisastringswellsoisths
-
-'''
 def normalise(string):
+    """
+        normalise
+
+    Converts a string into a normalised string. This removes all non-letter
+    non-number characters from the string.
+
+    Args:
+        string: the string to be normalised
+
+    Returns:
+        A normalised string (only the letter & number characters). For example:
+        this is-a string @swell & so is th1s => thisisastringswellsoisths
+    """
     return sub(r"[\W_]+", "", string)
 
 
