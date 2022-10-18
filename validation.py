@@ -1,6 +1,27 @@
 from abc import ABC, abstractmethod
+from re import sub
+from inflection import camelize
+
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
+def normalise(string):
+    """
+        normalise
+
+    Converts a string into a normalised string. This removes all non-letter
+    non-number characters from the string.
+
+    Args:
+        string: the string to be normalised
+
+    Returns:
+        A normalised string (only the letter & number characters). For example:
+        this is-a string @swell & so is th1s => thisisastringswellsoisths
+    """
+    return sub(r"[\W_]+", "", string)
+
 
 class Validator(ABC):
     def __set_name__(self, owner, name):
@@ -36,3 +57,35 @@ class Number(Validator):
             msg = f'Expected {value!r} to be no more than {self.maxvalue!r}'
             logging.error(msg)
             raise ValueError(msg)
+
+
+class String(Validator):
+    def __init__(self, case=None):
+        self.case = case
+
+    def validate(self, value):
+        if not isinstance(value, (str)):
+            msg = f"Expected {value!r} to be a String"
+            logging.error(msg)
+            raise TypeError(msg)
+        match self.case:
+            case "lower":
+                if value.lower() != value:
+                    msg = f"Expected {value!r} to be all lower case."
+                    logging.error(msg)
+                    raise TypeError(msg)
+            case "upper":
+                if value.upper() != value:
+                    msg = f"Expected {value!r} to be all upper case."
+                    logging.error(msg)
+                    raise TypeError(msg)
+            case "camel":
+                if camelize(value, False) != value:
+                    msg = f"Expected {value!r} to be camel case."
+                    logging.error(msg)
+                    raise TypeError(msg)
+            case "normalised":
+                if normalise(value) != value:
+                    msg = f"Expected {value!r} to be a normalised string."
+                    logging.error(msg)
+                    raise TypeError(msg)
