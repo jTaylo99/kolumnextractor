@@ -65,17 +65,27 @@ class String(Validator):
 
     def validate(self, value):
         if not isinstance(value, (str)):
-            raise TypeError(f"Expected {value!r} to be a String")
+            msg = f"Expected {value!r} to be a String"
+            logging.error(msg)
+            raise TypeError(msg)
         match self.case:
             case "lower":
                 if value.lower() != value:
-                    raise ValueError(f"Expected {value!r} to be all lower case.")
+                    msg = f"Expected {value!r} to be all lower case."
+                    logging.error(msg)
+                    raise TypeError(msg)
             case "upper":
                 if value.upper() != value:
-                    raise ValueError(f"Expected {value!r} to be all upper case.")
+                    msg = f"Expected {value!r} to be all upper case."
+                    logging.error(msg)
+                    raise TypeError(msg)
             case "camel":
                 if camelize(value, False) != value:
-                    raise ValueError(f"Expected {value!r} to be camel case.")
+                    msg = f"Expected {value!r} to be camel case."
+                    logging.error(msg)
+                    raise TypeError(msg)
             case "normalised":
                 if normalise(value) != value:
-                    raise ValueError(f"Expected {value!r} to be a normalised string.")
+                    msg = f"Expected {value!r} to be a normalised string."
+                    logging.error(msg)
+                    raise TypeError(msg)
