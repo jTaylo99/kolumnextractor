@@ -1,12 +1,16 @@
 from validation import Number
 
+import logging
+logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 class Data:
     _columns = {}
 
     def __init__(self, *args):
         if len(args) != len(self._columns):
-            raise TypeError(f'Expected {len(self._columns)} arguments.')
+            msg = f'Expected {len(self._columns)} arguments.'
+            logging.error(msg)
+            raise TypeError(msg)
 
         for name, value in zip(self._columns.keys(), args):
             setattr(self, name, value)

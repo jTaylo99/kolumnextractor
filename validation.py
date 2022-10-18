@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from re import sub
 from inflection import camelize
 
+import logging
+logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 
 def normalise(string):
     """
@@ -43,15 +46,17 @@ class Number(Validator):
 
     def validate(self, value):
         if not isinstance(value, (int, float)):
-            raise TypeError(f'Expected {value!r} to be an int or float')
+            msg = f'Expected {value!r} to be an int or float'
+            logging.error(msg)
+            raise TypeError(msg)
         if self.minvalue is not None and value < self.minvalue:
-            raise ValueError(
-                f'Expected {value!r} to be at least {self.minvalue!r}'
-            )
+            msg = f'Expected {value!r} to be at least {self.minvalue!r}'
+            logging.error(msg)
+            raise ValueError(msg)
         if self.maxvalue is not None and value > self.maxvalue:
-            raise ValueError(
-                f'Expected {value!r} to be no more than {self.maxvalue!r}'
-            )
+            msg = f'Expected {value!r} to be no more than {self.maxvalue!r}'
+            logging.error(msg)
+            raise ValueError(msg)
 
 
 class String(Validator):
