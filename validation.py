@@ -1,8 +1,10 @@
+import logging
+import datetime as dt
+
 from abc import ABC, abstractmethod
 from re import sub
 from inflection import camelize
 
-import logging
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
@@ -89,3 +91,30 @@ class String(Validator):
                     msg = f"Expected {value!r} to be a normalised string."
                     logging.error(msg)
                     raise TypeError(msg)
+
+class Date(Validator):
+    def __init__(self, earliest_date=None, latest_date=None, first_of_month=False):
+        self.earliest_date = earliest_date
+        self.latest_date = latest_date
+        self.first_of_month = first_of_month
+
+    def validate(self, value):
+        if not isinstance(value, (dt.date)):
+            msg = f'Expected {value!r} to be an int or float'
+            logging.error(msg)
+            raise TypeError(msg)
+        if self.earliest_date is not None and value < self.earliest_date:
+            msg = f'Expected {value!r} to be at least {self.earliest_date!r}'
+            logging.error(msg)
+            raise ValueError(msg)
+        if self.latest_date is not None and value > self.latest_date:
+            msg = f'Expected {value!r} to be no more than {self.latest_date!r}'
+            logging.error(msg)
+            raise ValueError(msg)
+        if self.first_of_month and value.day != 1:
+            msg = f'Expected {value!r} to be first day of the month'
+            logging.error(msg)
+            raise ValueError(msg)
+
+
+    
