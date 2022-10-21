@@ -31,22 +31,12 @@ def determine_read(info_dict):
             logging.error('File is not a CSV. Please supply a CSV file type.')
 
 
-def reading(filepath: str, data_definition):
-    match type(data_definition).ToString():
-        case "Data":
-            return determine_read({
-                "path": filepath,
-                "definition": data_definition,
-                "type": os.path.splitext(filepath)[1],
-            })
-        case "dict":
-            return determine_read({
-                "path": filepath,
-                "definition": data_definition,
-                "type": os.path.splitext(filepath)[1],
-            })
-        case _:
-            return TypeError("Invalid data definition")
+def reading(filepath: str, columns):
+    return determine_read({
+        "path": filepath,
+        "definition": columns,
+        "type": os.path.splitext(filepath)[1],
+        })
 
 
 if __name__ == '__main__':
