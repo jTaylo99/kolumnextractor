@@ -100,19 +100,18 @@ class Date(Validator):
 
     def validate(self, value):
         if not isinstance(value, (dt.date)):
-            msg = f'Expected {value!r} to be an int or float'
+            msg = f'Expected {value} to be an int or float'
             logging.error(msg)
             raise TypeError(msg)
         if self.earliest_date is not None and value < self.earliest_date:
-            msg = f'Expected {value!r} to be at least {self.earliest_date!r}'
+            msg = f'Expected {value} to be at least {self.earliest_date!r}'
             logging.error(msg)
             raise ValueError(msg)
         if self.latest_date is not None and value > self.latest_date:
-            msg = f'Expected {value!r} to be no more than {self.latest_date!r}'
+            msg = f'Expected {value} to be no more than {self.latest_date}'
             logging.error(msg)
             raise ValueError(msg)
         if self.first_of_month and value.day != 1:
-            msg = f'Expected {value!r} to be first day of the month'
+            msg = f'Expected {value} to be first day of the month'
             logging.error(msg)
             raise ValueError(msg)
-            
