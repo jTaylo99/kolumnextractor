@@ -3,7 +3,9 @@ from re import sub
 from inflection import camelize
 
 import logging
-logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 def normalise(string):
@@ -24,15 +26,18 @@ def normalise(string):
 
 
 class Validator(ABC):
-    def __set_name__(self, owner, name):
-        self.private_name = f'_{name}'
+    def __init__(self):
+        self.name = None
+
+    def set_name(self, name):
+        self.name = f'{name}'
 
     def __get__(self, obj, objtype=None):
-        return getattr(obj, self.private_name)
+        return getattr(obj, self.name)
 
     def __set__(self, obj, value):
         self.validate(value)
-        setattr(obj, self.private_name, value)
+        setattr(obj, self.name, value)
 
     @abstractmethod
     def validate(self, value):
