@@ -115,6 +115,4 @@ class Date(Validator):
             msg = f'Expected {value!r} to be first day of the month'
             logging.error(msg)
             raise ValueError(msg)
-
-
-    
+            

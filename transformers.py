@@ -16,6 +16,4 @@ def date_normalizer(date_input):
         return dt.date.fromtimestamp(date_input / 1e3)
     elif type(date_input) == dt.date:
         return date_input
-    
-
-    
+        
