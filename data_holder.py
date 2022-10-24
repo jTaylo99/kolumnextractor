@@ -3,6 +3,7 @@ from validation import Number
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+
 class Data:
     _columns = {}
 
@@ -12,8 +13,13 @@ class Data:
             logging.error(msg)
             raise TypeError(msg)
 
-        for name, value in zip(self._columns.keys(), kwargs):
-            setattr(self, name, value)
+        for (column, validator) in self._columns.items():
+            validator.set_name(column)
+            validator.__set__(self, kwargs[column])
+
+    @property
+    def columns(self):
+        return self._columns
 
 
 class DataContainer:
@@ -28,22 +34,18 @@ class DataContainer:
 
     @property
     def _columns(self):
-        return self._type_of_row._columns
+        return self._type_of_row.columns
 
     def validate_row(self, row: Data):
         if list(row.__dict__.keys()) != self._columns:
             raise TypeError
 
 
-class Name(Data):
-    _columns = {"Column 1": Number(minvalue=1, maxvalue=100),
-                "Column 2": Number(minvalue=1, maxvalue=100),
-                "Column 3": Number(minvalue=1, maxvalue=100),}
-
-
-class Name2(Data):
-    _columns = ["Column 4", "Column 5", 'Column 6']
-
-
-class NameHolder(DataContainer):
-    _type_of_row = Name
+if __name__ == '__main__':
+    class Name(Data):
+        _columns = {
+            "Column 1": Number(minvalue=1, maxvalue=100),
+            "Column 2": Number(minvalue=1, maxvalue=100),
+            "Column 3": Number(minvalue=1, maxvalue=100),
+        }
+    name_row = Name(**{"Column 1" : 1, "Column 2" : 1, "Column 3" : 1})

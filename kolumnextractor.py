@@ -3,6 +3,7 @@ import os
 import logging
 from data_holder import Data, DataContainer
 from validation import Number
+
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 def filter_columns(raw_data: list, columns_to_filter):
@@ -43,9 +44,12 @@ def determine_read(info_dict):
 
 
 def reading(filepath: str, columns):
-    return determine_read({"path": filepath,
-                           "columns": columns,
-                           "type": os.path.splitext(filepath)[1]})
+    return determine_read({
+        "path": filepath,
+        "definition": columns,
+        "type": os.path.splitext(filepath)[1],
+        })
+
 
 
 def reading_data(filepath: str, columns: Data):
