@@ -6,13 +6,13 @@ logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', forma
 class Data:
     _columns = {}
 
-    def __init__(self, *args):
-        if len(args) != len(self._columns):
+    def __init__(self, **kwargs):
+        if len(kwargs) != len(self._columns):
             msg = f'Expected {len(self._columns)} arguments.'
             logging.error(msg)
             raise TypeError(msg)
 
-        for name, value in zip(self._columns.keys(), args):
+        for name, value in zip(self._columns.keys(), kwargs):
             setattr(self, name, value)
 
 
