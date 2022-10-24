@@ -1,6 +1,8 @@
 import csv
 import os
 import logging
+from data_holder import Data, DataContainer
+from validation import Number
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 def filter_columns(raw_data: list, columns_to_filter):
@@ -10,14 +12,26 @@ def filter_columns(raw_data: list, columns_to_filter):
     return [[row[index] for index in index_to_keep] for row in raw_data]
 
 
+def construct_datacontainer(raw_data: list, columns: Data):
+    data = []
+    for r in raw_data:
+        row = {col: r[col] for col in columns._columns.keys()}
+        data.append(columns(**row))
+    return DataContainer(data)
+
+
 def read_csv(info_dict):
     with open(info_dict["path"], newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         all_items = list(reader)
+        headers = all_items.pop(0)
+        raw_data = [dict(zip(headers, r)) for r in all_items]
+        print(raw_data)
         if info_dict["columns"] is not None:
-            all_items = filter_columns(all_items, columns_to_filter=info_dict["columns"])
-        logging.debug(f'{all_items = }')
-        return all_items
+            data = construct_datacontainer(raw_data, info_dict["columns"])
+            # all_items = filter_columns(all_items, columns_to_filter=info_dict["columns"])
+        logging.debug(f'{data = }')
+        return data
 
 
 def determine_read(info_dict):
@@ -33,6 +47,17 @@ def reading(filepath: str, columns):
                            "columns": columns,
                            "type": os.path.splitext(filepath)[1]})
 
+
+def reading_data(filepath: str, columns: Data):
+    return determine_read({"path": filepath,
+                           "columns": columns,
+                           "type": os.path.splitext(filepath)[1]})
+
+
 if __name__ == '__main__':
-    test = reading(filepath="test.csv", columns=['column 1', 'column 2'])
-    print(test)
+    class Name(Data):
+        _columns = {"column2": Number(minvalue=1, maxvalue=100),
+                    "column1": Number(minvalue=1, maxvalue=100),
+                    "column3": Number(minvalue=1, maxvalue=100),}
+    test = reading_data(filepath="test.csv", columns=Name)
+    print(test.data[0]._columns)
