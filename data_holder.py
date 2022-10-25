@@ -1,20 +1,11 @@
-import validation
+from validation import Number
 
 import logging
-
-logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w',
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class Data:
     _columns = {}
-
-    def __new__(cls, *args):
-        obj = object().__new__(cls)
-        for name, descriptor in cls._columns.items():
-            object.__setattr__(obj, name, descriptor)
-            getattr(obj, name).__set_name__(cls, name)
-        return obj
 
     def __init__(self, *args):
         if len(args) != len(self._columns):
@@ -22,14 +13,13 @@ class Data:
             logging.error(msg)
             raise TypeError(msg)
 
-        for (name, validator), value in zip(self._columns.items(), args):
-            # validator.__set_name__(cls, name)
-            # getattr(self, name).__setattr__(name, value)
-            setattr(self, name, value)
+        for (column, validator), value in zip(self._columns.items(), args):
+            validator.set_name(column)
+            validator.__set__(self, value)
 
-    # @property
-    # def columns(self):
-    #     return self._columns
+    @property
+    def columns(self):
+        return self._columns
 
 
 class DataContainer:
@@ -54,10 +44,8 @@ class DataContainer:
 if __name__ == '__main__':
     class Name(Data):
         _columns = {
-            "Column_1": validation.Number(minvalue=1, maxvalue=100),
-            # "Column_2": validation.Number(minvalue=1, maxvalue=100),
-            # "Column_3": validation.Number(minvalue=1, maxvalue=100),
+            "Column 1": Number(minvalue=1, maxvalue=100),
+            "Column 2": Number(minvalue=1, maxvalue=100),
+            "Column 3": Number(minvalue=1, maxvalue=100),
         }
-
-
-    name_row = Name(0)
+    name_row = Name(1, 1, 1)

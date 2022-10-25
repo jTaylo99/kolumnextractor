@@ -27,18 +27,18 @@ def normalise(string):
 
 
 class Validator(ABC):
-    def __set_name__(self, owner, name):
-        print(f'setting name to {name}')
-        self.public_name = name
+    def __init__(self):
+        self.name = None
+
+    def set_name(self, name):
+        self.name = f'{name}'
 
     def __get__(self, obj, objtype=None):
-        return getattr(obj, self.public_name)
+        return getattr(obj, self.name)
 
     def __set__(self, obj, value):
-        self.validate(value=value)
-        print('descriptor validated')
-        setattr(obj, self.public_name, value)
-        print('attribute set')
+        self.validate(value)
+        setattr(obj, self.name, value)
 
     @abstractmethod
     def validate(self, value):
