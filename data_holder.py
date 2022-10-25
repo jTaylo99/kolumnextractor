@@ -1,4 +1,4 @@
-from validation import Number
+import validation
 
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -44,8 +44,8 @@ class DataContainer:
 if __name__ == '__main__':
     class Name(Data):
         _columns = {
-            "Column 1": Number(minvalue=1, maxvalue=100),
-            "Column 2": Number(minvalue=1, maxvalue=100),
-            "Column 3": Number(minvalue=1, maxvalue=100),
+            "Column_1": validation.Unsigned(),
+            "Column_2": validation.String(case='lower'),
+            "Column_3": validation.Number(minvalue=1, maxvalue=100),
         }
-    name_row = Name(1, 1, 1)
+    name_row = Name(100.0, 'lower', 1)
