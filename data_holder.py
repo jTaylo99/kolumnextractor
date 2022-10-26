@@ -7,15 +7,15 @@ logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', forma
 class Data:
     _columns = {}
 
-    def __init__(self, *args):
-        if len(args) != len(self._columns):
+    def __init__(self, **kwargs):
+        if len(kwargs) != len(self._columns):
             msg = f'Expected {len(self._columns)} arguments.'
             logging.error(msg)
             raise TypeError(msg)
 
-        for (column, validator), value in zip(self._columns.items(), args):
+        for (column, validator) in self._columns.items():
             validator.set_name(column)
-            validator.__set__(self, value)
+            validator.__set__(self, kwargs[column])
 
     @property
     def columns(self):
@@ -48,4 +48,4 @@ if __name__ == '__main__':
             "Column 2": Number(minvalue=1, maxvalue=100),
             "Column 3": Number(minvalue=1, maxvalue=100),
         }
-    name_row = Name(1, 1, 1)
+    name_row = Name(**{"Column 1":1, "Column 2":1, "Column 3":1})
