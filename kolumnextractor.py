@@ -2,7 +2,7 @@ import csv
 import os
 import logging
 from data_holder import Data, DataContainer
-from validation import Number
+from validation import Number, normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -25,9 +25,8 @@ def read_csv(info_dict):
     with open(info_dict["path"], newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         all_items = list(reader)
-        headers = all_items.pop(0)
+        headers = [normalise(h) for h in all_items.pop(0)]
         raw_data = [dict(zip(headers, r)) for r in all_items]
-        print(raw_data)
         if info_dict["columns"] is not None:
             data = construct_datacontainer(raw_data, info_dict["columns"])
             # all_items = filter_columns(all_items, columns_to_filter=info_dict["columns"])

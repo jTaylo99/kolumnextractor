@@ -48,4 +48,4 @@ if __name__ == '__main__':
             "Column 2": Number(minvalue=1, maxvalue=100),
             "Column 3": Number(minvalue=1, maxvalue=100),
         }
-    name_row = Name(**{"Column 1" : 1, "Column 2" : 1, "Column 3" : 1})
+    name_row = Name(**{"Column 1":1, "Column 2":1, "Column 3":1})
