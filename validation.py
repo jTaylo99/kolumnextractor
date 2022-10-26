@@ -8,7 +8,6 @@ from inflection import camelize
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-
 def normalise(string):
     """
         normalise
@@ -24,6 +23,28 @@ def normalise(string):
         this is-a string @swell & so is th1s => thisisastringswellsoisths
     """
     return sub(r"[\W_]+", "", string)
+
+
+def to_number(str):
+    """
+        to_number(str)
+
+    Converts string from input into a number.
+
+    Args:
+        str: the string to be converted
+
+    Returns:
+        The string as an Int if it is an Int, a Float if it is a Float, 
+        or returns a ValueError if it is neither.
+    """
+    try:
+        return int(str)
+    except ValueError:
+        try:
+            return float(str)
+        except ValueError:
+            return ValueError
 
 
 class Validator(ABC):
@@ -51,6 +72,7 @@ class Number(Validator):
         self.maxvalue = maxvalue
 
     def validate(self, value):
+        value = to_number(value)
         if not isinstance(value, (int, float)):
             msg = f'Expected {value!r} to be an int or float'
             logging.error(msg)
