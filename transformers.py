@@ -1,6 +1,7 @@
 import datetime as dt
 from time import strptime
 from dateutil.parser import parse
+from re import sub
 
 def date_normalizer(date_input):
 
@@ -16,4 +17,21 @@ def date_normalizer(date_input):
         return dt.date.fromtimestamp(date_input / 1e3)
     elif type(date_input) == dt.date:
         return date_input
+
+
+def normalise(string):
+    """
+        normalise
+
+    Converts a string into a normalised string. This removes all non-letter
+    non-number characters from the string.
+
+    Args:
+        string: the string to be normalised
+
+    Returns:
+        A normalised string (only the letter & number characters). For example:
+        this is-a string @swell & so is th1s => thisisastringswellsoisths
+    """
+    return sub(r"[\W_]+", "", string)
         

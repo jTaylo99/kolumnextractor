@@ -2,27 +2,10 @@ import logging
 import datetime as dt
 
 from abc import ABC, abstractmethod
-from re import sub
 from inflection import camelize
+from transformers import normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-
-def normalise(string):
-    """
-        normalise
-
-    Converts a string into a normalised string. This removes all non-letter
-    non-number characters from the string.
-
-    Args:
-        string: the string to be normalised
-
-    Returns:
-        A normalised string (only the letter & number characters). For example:
-        this is-a string @swell & so is th1s => thisisastringswellsoisths
-    """
-    return sub(r"[\W_]+", "", string)
 
 
 def to_number(str):
