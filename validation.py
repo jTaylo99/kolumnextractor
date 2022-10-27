@@ -18,7 +18,7 @@ def to_number(str):
         str: the string to be converted
 
     Returns:
-        The string as an Int if it is an Int, a Float if it is a Float, 
+        The string as an Int if it is an Int, a Float if it is a Float,
         or returns a ValueError if it is neither.
     """
     try:
@@ -29,10 +29,7 @@ def to_number(str):
         except ValueError:
             return ValueError
 
-
 class Validator(ABC):
-    def __init__(self):
-        self.name = None
 
     def set_name(self, name):
         self.name = f'{name}'
@@ -49,36 +46,40 @@ class Validator(ABC):
         pass
 
 
-class Number(Validator):
-    def __init__(self, minvalue=None, maxvalue=None):
-        self.minvalue = minvalue
-        self.maxvalue = maxvalue
+class OneOf(Validator):
+    """ Descriptor for enforcing value is one of the options provided"""
+    def __init__(self, *options):
+        self.options = set(options)
 
     def validate(self, value):
         value = to_number(value)
-        if not isinstance(value, (int, float)):
-            msg = f'Expected {value!r} to be an int or float'
-            logging.error(msg)
-            raise TypeError(msg)
-        if self.minvalue is not None and value < self.minvalue:
-            msg = f'Expected {value!r} to be at least {self.minvalue!r}'
-            logging.error(msg)
-            raise ValueError(msg)
-        if self.maxvalue is not None and value > self.maxvalue:
-            msg = f'Expected {value!r} to be no more than {self.maxvalue!r}'
-            logging.error(msg)
-            raise ValueError(msg)
+        if value not in self.options:
+            raise ValueError(f'Expected {value!r} to be one of {self.options!r}')
+
+class Unsigned(Validator):
+    """Descriptor for enforcing positive or zero numbers"""
+    def validate(self, value):
+        if value < 0:
+            raise ValueError('Expected >= 0')
 
 
-class String(Validator):
+class Typed(Validator):
+    """Descriptor for enforcing types"""
+    def __init__(self, expected_type):
+        self.expected_type = expected_type
+
+    def validate(self, value):
+        if not isinstance(value, self.expected_type):
+            raise TypeError(f'Expected {str(self.expected_type)}')
+
+
+class String(Typed):
     def __init__(self, case=None):
+        super().__init__(expected_type=str)
         self.case = case
 
     def validate(self, value):
-        if not isinstance(value, (str)):
-            msg = f"Expected {value!r} to be a String"
-            logging.error(msg)
-            raise TypeError(msg)
+        super().validate(value=value)
         match self.case:
             case "lower":
                 if value.lower() != value:
@@ -101,17 +102,17 @@ class String(Validator):
                     logging.error(msg)
                     raise TypeError(msg)
 
-class Date(Validator):
+
+class Date(Typed):
     def __init__(self, earliest_date=None, latest_date=None, first_of_month=False):
+        super().__init__(expected_type=dt.date)
         self.earliest_date = earliest_date
         self.latest_date = latest_date
         self.first_of_month = first_of_month
+        self.expected_type = dt.date
 
     def validate(self, value):
-        if not isinstance(value, (dt.date)):
-            msg = f'Expected {value} to be an int or float'
-            logging.error(msg)
-            raise TypeError(msg)
+        super().validate(value=value)
         if self.earliest_date is not None and value < self.earliest_date:
             msg = f'Expected {value} to be at least {self.earliest_date!r}'
             logging.error(msg)
@@ -124,3 +125,24 @@ class Date(Validator):
             msg = f'Expected {value} to be first day of the month'
             logging.error(msg)
             raise ValueError(msg)
+
+
+class Number(Typed):
+    """Descriptor to enforce numerical values as int or float types allowing max and min values as well"""
+    def __init__(self, minvalue=None, maxvalue=None):
+        super().__init__(expected_type=(int, float))
+        self.minvalue = minvalue
+        self.maxvalue = maxvalue
+        self.expected_type = (int, float)
+
+    def validate(self, value):
+        super().validate(value=value)
+        if self.minvalue is not None and value < self.minvalue:
+            msg = f'Expected {value!r} to be at least {self.minvalue!r}'
+            logging.error(msg)
+            raise ValueError(msg)
+        if self.maxvalue is not None and value > self.maxvalue:
+            msg = f'Expected {value!r} to be no more than {self.maxvalue!r}'
+            logging.error(msg)
+            raise ValueError(msg)
+
