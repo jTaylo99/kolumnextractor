@@ -4,6 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+inflection = '>0.5.1'
+python-dateutil = '>2.8.2'
 
 [dev-packages]
 

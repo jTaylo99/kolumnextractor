@@ -2,28 +2,32 @@ import logging
 import datetime as dt
 
 from abc import ABC, abstractmethod
-from re import sub
 from inflection import camelize
+from transformers import normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-
-def normalise(string):
+def to_number(str):
     """
-        normalise
+        to_number(str)
 
-    Converts a string into a normalised string. This removes all non-letter
-    non-number characters from the string.
+    Converts string from input into a number.
 
     Args:
-        string: the string to be normalised
+        str: the string to be converted
 
     Returns:
-        A normalised string (only the letter & number characters). For example:
-        this is-a string @swell & so is th1s => thisisastringswellsoisths
+        The string as an Int if it is an Int, a Float if it is a Float, 
+        or returns a ValueError if it is neither.
     """
-    return sub(r"[\W_]+", "", string)
+    try:
+        return int(str)
+    except ValueError:
+        try:
+            return float(str)
+        except ValueError:
+            return ValueError
 
 
 class Validator(ABC):
@@ -51,6 +55,7 @@ class Number(Validator):
         self.maxvalue = maxvalue
 
     def validate(self, value):
+        value = to_number(value)
         if not isinstance(value, (int, float)):
             msg = f'Expected {value!r} to be an int or float'
             logging.error(msg)
