@@ -9,10 +9,7 @@ logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', forma
 
 
 def to_number(str):
-    """
-        to_number(str)
-
-    Converts string from input into a number.
+    """Converts string from input into a number.
 
     Args:
         str: the string to be converted
@@ -28,6 +25,7 @@ def to_number(str):
             return float(str)
         except ValueError:
             return ValueError
+
 
 class Validator(ABC):
 
@@ -55,6 +53,7 @@ class OneOf(Validator):
         value = to_number(value)
         if value not in self.options:
             raise ValueError(f'Expected {value!r} to be one of {self.options!r}')
+
 
 class Unsigned(Validator):
     """Descriptor for enforcing positive or zero numbers"""
