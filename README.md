@@ -3,6 +3,13 @@
 The goal of KolumnExtrActor (KEA) is to provide an easy to use interface to read different types of files by providing a filepath with optional columns and conditions for
 said columns.
 
+KEA will allow functionality to specify which of the columns in the file should be read in. It also allow the specification of the type and format of the data in each of these columns. For example, it could be a specified that a column is a Number, between 1 and 100.
+
+## Requirements
+
+Python 3.10 or above.
+Packages in requirements.txt
+
 ## Run Tests
 
 	py -m unittest -v
