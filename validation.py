@@ -49,7 +49,6 @@ class OneOf(Validator):
         self.options = set(options)
 
     def validate(self, value):
-        value = to_number(value)
         if value not in self.options:
             raise ValueError(f'Expected {value!r} to be one of {self.options!r}')
 
