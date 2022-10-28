@@ -7,8 +7,8 @@ KEA will allow functionality to specify which of the columns in the file should 
 
 ## Requirements
 
-Python 3.10 or above.
-Packages in requirements.txt
+Python 3.10 or above.  
+Packages in requirements.txt  
 git
 ## Run Tests
 ```bash
