@@ -91,7 +91,7 @@ class String(Validator):
                     logging.error(msg)
                     raise TypeError(msg)
             case "camel":
-                if camelize(value, False) != value:
+                if camelize(value) != value:
                     msg = f"Expected {value!r} to be camel case."
                     logging.error(msg)
                     raise TypeError(msg)
