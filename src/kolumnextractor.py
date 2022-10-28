@@ -62,5 +62,5 @@ if __name__ == '__main__':
         _columns = {"column2": Number(minvalue=1, maxvalue=100),
                     "column1": Number(minvalue=1, maxvalue=100),
                     "column3": Number(minvalue=1, maxvalue=100),}
-    test = reading_data(filepath="test.csv", columns=Name)
+    test = reading_data(filepath="../data/test.csv", columns=Name)
     print(test.data[0]._columns)
