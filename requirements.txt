@@ -1,2 +1,3 @@
 inflection
 python-dateutil
+pytest
