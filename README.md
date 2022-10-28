@@ -9,10 +9,12 @@ KEA will allow functionality to specify which of the columns in the file should 
 
 Python 3.10 or above.
 Packages in requirements.txt
-
+git
 ## Run Tests
-
-	py -m unittest -v
+```bash
+    pip install -r requirements.txt
+    pytest
+```
 
 ## Contributing
 
