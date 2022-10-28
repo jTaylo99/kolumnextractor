@@ -8,27 +8,26 @@ from transformers import normalise
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
-def to_number(str):
+def to_number(string: str):
     """Converts string from input into a number.
 
     Args:
-        str: the string to be converted
+        string: the string to be converted
 
     Returns:
         The string as an Int if it is an Int, a Float if it is a Float,
         or returns a ValueError if it is neither.
     """
     try:
-        return int(str)
+        return int(string)
     except ValueError:
         try:
-            return float(str)
+            return float(string)
         except ValueError:
             return ValueError
 
 
 class Validator(ABC):
-
     def set_name(self, name):
         self.name = f'{name}'
 
@@ -72,13 +71,15 @@ class Typed(Validator):
             raise TypeError(f'Expected {str(self.expected_type)}')
 
 
-class String(Typed):
+class String(Validator):
     def __init__(self, case=None):
-        super().__init__(expected_type=str)
         self.case = case
 
     def validate(self, value):
-        super().validate(value=value)
+        if not isinstance(value, str):
+            msg = f"Expected {value!r} to be a String"
+            logging.error(msg)
+            raise TypeError(msg)
         match self.case:
             case "lower":
                 if value.lower() != value:
@@ -102,16 +103,17 @@ class String(Typed):
                     raise TypeError(msg)
 
 
-class Date(Typed):
+class Date(Validator):
     def __init__(self, earliest_date=None, latest_date=None, first_of_month=False):
-        super().__init__(expected_type=dt.date)
         self.earliest_date = earliest_date
         self.latest_date = latest_date
         self.first_of_month = first_of_month
-        self.expected_type = dt.date
 
     def validate(self, value):
-        super().validate(value=value)
+        if not isinstance(value, dt.date):
+            msg = f'Expected {value} to be an int or float'
+            logging.error(msg)
+            raise TypeError(msg)
         if self.earliest_date is not None and value < self.earliest_date:
             msg = f'Expected {value} to be at least {self.earliest_date!r}'
             logging.error(msg)
@@ -126,16 +128,18 @@ class Date(Typed):
             raise ValueError(msg)
 
 
-class Number(Typed):
+class Number(Validator):
     """Descriptor to enforce numerical values as int or float types allowing max and min values as well"""
     def __init__(self, minvalue=None, maxvalue=None):
-        super().__init__(expected_type=(int, float))
         self.minvalue = minvalue
         self.maxvalue = maxvalue
-        self.expected_type = (int, float)
 
     def validate(self, value):
-        super().validate(value=value)
+        value = to_number(value)
+        if not isinstance(value, (int, float)):
+            msg = f'Expected {value!r} to be an int or float'
+            logging.error(msg)
+            raise TypeError(msg)
         if self.minvalue is not None and value < self.minvalue:
             msg = f'Expected {value!r} to be at least {self.minvalue!r}'
             logging.error(msg)
