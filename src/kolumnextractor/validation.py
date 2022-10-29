@@ -3,7 +3,7 @@ import datetime as dt
 
 from abc import ABC, abstractmethod
 from inflection import camelize
-from transformers import normalise
+from kolumnextractor.transformers import normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -18,7 +18,7 @@ def to_number(str):
         str: the string to be converted
 
     Returns:
-        The string as an Int if it is an Int, a Float if it is a Float, 
+        The string as an Int if it is an Int, a Float if it is a Float,
         or returns a ValueError if it is neither.
     """
     try:

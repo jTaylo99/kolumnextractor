@@ -21,3 +21,6 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/jTaylo99/kolumnextractor"
 "Bug Tracker" = "https://github.com/jTaylo99/kolumnextractor/issues"
+
+[tool.pytest.ini_options]
+pythonpath = [ "./src" ]
