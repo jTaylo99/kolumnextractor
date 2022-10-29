@@ -1,8 +1,8 @@
 import csv
 import os
 import logging
-from data_holder import Data, DataContainer
-from validation import Number, normalise
+from kolumnextractor.data_holder import Data, DataContainer
+from kolumnextractor.validation import Number, normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -62,5 +62,5 @@ if __name__ == '__main__':
         _columns = {"column2": Number(minvalue=1, maxvalue=100),
                     "column1": Number(minvalue=1, maxvalue=100),
                     "column3": Number(minvalue=1, maxvalue=100),}
-    test = reading_data(filepath="../data/test.csv", columns=Name)
+    test = reading_data(filepath="data/test.csv", columns=Name)
     print(test.data[0]._columns)
