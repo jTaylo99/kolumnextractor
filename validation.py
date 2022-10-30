@@ -50,12 +50,20 @@ class Validator(ABC):
 
 
 class Number(Validator):
-    def __init__(self, minvalue=None, maxvalue=None):
+    def __init__(self, minvalue=None, maxvalue=None, default=None):
         self.minvalue = minvalue
         self.maxvalue = maxvalue
-
+        if isinstance(default, (int, float)) or default is None:
+            self.default =  default
+        else:
+            raise TypeError("Int or float required for default.")
+    
     def validate(self, value):
+        print(value)
         value = to_number(value)
+        if value == None:
+            value = self.default
+            return
         if not isinstance(value, (int, float)):
             msg = f'Expected {value!r} to be an int or float'
             logging.error(msg)

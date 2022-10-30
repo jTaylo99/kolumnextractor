@@ -45,7 +45,7 @@ def determine_read(info_dict):
 def reading(filepath: str, columns):
     return determine_read({
         "path": filepath,
-        "definition": columns,
+        "columns": columns,
         "type": os.path.splitext(filepath)[1],
         })
 
