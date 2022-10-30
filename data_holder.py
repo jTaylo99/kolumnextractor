@@ -14,8 +14,9 @@ class Data:
             raise TypeError(msg)
 
         for (column, validator) in self._columns.items():
-            validator.set_name(column)
-            validator.__set__(self, kwargs[column])
+            if validator != None:
+                validator.set_name(column)
+                validator.__set__(self, kwargs[column])
 
     @property
     def columns(self):
