@@ -1,0 +1,4 @@
+inflection
+python-dateutil
+pytest
+
