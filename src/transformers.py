@@ -1,6 +1,5 @@
 import datetime as dt
-import config_parameters
-from time import strptime
+from src import config_parameters
 from dateutil.parser import parse
 from re import sub
 
@@ -37,7 +36,7 @@ def normalise(string):
     return sub(r"[\W_]+", "", string)
 
 
-def unit_converter(value, numerator_from, numerator_to, denominator_from=1, denominator_to=1):
+def unit_converter(value, numerator_from, numerator_to, denominator_from=None, denominator_to=None):
     """
         unit_converter
 
@@ -47,16 +46,20 @@ def unit_converter(value, numerator_from, numerator_to, denominator_from=1, deno
         value: (int, float) to be converted
         numerator_from: string that represents the numerator units the data is currently in.
         numerator_to: string of the desired numerator unit.
-        denominator_from: string of the denominator unit. By default, it is set to 1.
-        denominator_to: string of the denominator unit to be converted to. By default, it is set to 1.
+        denominator_from: (Optional) string of the denominator unit. By default, it is set to 1.
+        denominator_to: (Optional) string of the denominator unit to be converted to. By default, it is set to 1.
     
     Returns:
         Number that has had unit conversion. For example:
         10 [m3/s] = 10000/60 [l/min]
     """
     try:
-        config_parameters.conversion_dict[(numerator_from, numerator_to)] * value / (config_parameters.conversion_dict[(denominator_from,denominator_to)])
-    except:
-        print("The units are not recognised. Check the units are either of l, m3, hr, s , min, kg, t")
-
-
+        if denominator_from is not None and denominator_to is not None:
+            return config_parameters.conversion_dict[(numerator_from, numerator_to)] * value / \
+                   (config_parameters.conversion_dict[(denominator_from, denominator_to)])
+        else:
+            return config_parameters.conversion_dict[(numerator_from, numerator_to)] * value
+    except KeyError:
+        raise KeyError(f"The units are not recognised. Check that both units are either of"
+                       f" {set([item for sublist in config_parameters.conversion_dict.keys() for item in sublist])}"
+                       f" and that you can convert between them")
