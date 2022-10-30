@@ -59,11 +59,11 @@ class Number(Validator):
             raise TypeError("Int or float required for default.")
     
     def validate(self, value):
-        print(value)
-        value = to_number(value)
-        if value == None:
+        if value == None or value == "":
+            print(value)
             value = self.default
             return
+        value = to_number(value)
         if not isinstance(value, (int, float)):
             msg = f'Expected {value!r} to be an int or float'
             logging.error(msg)
