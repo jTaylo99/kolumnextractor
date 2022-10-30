@@ -3,7 +3,8 @@ import datetime as dt
 
 from abc import ABC, abstractmethod
 from inflection import camelize
-from transformers import normalise
+
+from src.transformers import normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
