@@ -25,6 +25,7 @@ class Data:
         return self._columns
 
     def to_dict(self):
+        """Returns a dictionary with keys being column names and the values as the row items."""
         return {column: self.__dict__[column] for column in self._columns}
 
 
