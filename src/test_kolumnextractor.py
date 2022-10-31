@@ -1,6 +1,6 @@
 import unittest
 
-import kolumnextractor as kea
+import src.kolumnextractor as kea
 
 test_file = "data/test.csv"
 

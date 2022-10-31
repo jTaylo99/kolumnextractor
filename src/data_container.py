@@ -11,7 +11,7 @@ class Data:
     The validators check the data meets the necessary requirements.
 
     Attributes:
-        _columns: Dictionary where we define the columns and validators.
+        _columns: Dictionary that defines the columns and validators.
     """
     _columns = {}
 
@@ -35,9 +35,8 @@ class Data:
         return self._columns.keys()
 
     def to_dict(self):
-        """Returns a dictionary with keys being column names and the values as the row items."""
+        """Returns a dictionary with keys as column names and the values as the row items."""
         return {column: self.__dict__[column] for column in self._columns}
-
 
 class DataContainer:
     """ Class that holds all data instances in a single object, allowing for manipulation of all data combined.
@@ -67,12 +66,23 @@ class DataContainer:
         return self._type_of_row.columns
 
     def all_data_to_dict(self):
-        """Returns all data within the data container in the form of a list holding dictionaries."""
+        """Returns all data within the data container in a list containing the data as dictionaries."""
         to_return = []
         for data in self.data:
             to_return.append(data.to_dict())
         return to_return
 
+    def insert_data(self, data):
+        """Appends new data if the type of data matches _type_of_row."""
+        if isinstance(data, list):
+            for row in data:
+                if not isinstance(row, self._type_of_row):
+                    raise TypeError()
+                self.data.append(row)
+        else:
+            if not isinstance(data, self._type_of_row):
+                raise TypeError()
+            self.data.append()
 
 if __name__ == '__main__':
     class Name(Data):

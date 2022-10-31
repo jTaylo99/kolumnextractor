@@ -80,12 +80,13 @@ class Number(Validator):
 
         Raises:
             TypeError: If value is not an int or float."""
-
         if not isinstance(value, (int, float)):
-            value = to_number(value)
-            msg = f'Expected {value!r} to be an int or float'
-            logging.error(msg)
-            raise TypeError(msg)
+            try:
+                value = to_number(value)
+            except TypeError:
+                msg = f'Expected {value!r} to be an int or float'
+                logging.error(msg)
+                raise TypeError(msg)
         if self.minvalue is not None and value < self.minvalue:
             msg = f'Expected {value!r} to be at least {self.minvalue!r}'
             logging.error(msg)
