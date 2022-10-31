@@ -79,8 +79,12 @@ class Number(Validator):
             value: Value to be validated.
 
         Raises:
-            TypeError: If value is not an int or float."""
-
+            TypeError: If value is not an int or float.
+        """
+        if value == None or value == "":
+            print(value)
+            value = self.default
+            return
         if not isinstance(value, (int, float)):
             value = to_number(value)
             msg = f'Expected {value!r} to be an int or float'
@@ -94,6 +98,7 @@ class Number(Validator):
             msg = f'Expected {value!r} to be no more than {self.maxvalue!r}'
             logging.error(msg)
             raise ValueError(msg)
+
 
 
 class String(Validator):
