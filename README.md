@@ -31,6 +31,7 @@ To do this we create a new class based on the `Data` class. We specify the colum
 ```python
     from data_holder import Data
     from validation import Number
+    from kolumnextractor import reading_data
 
     class Name(Data):
         _columns = {"column2": None,
