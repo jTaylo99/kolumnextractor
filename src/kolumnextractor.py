@@ -1,10 +1,11 @@
 import csv
 import os
 import logging
-from data_holder import Data, DataContainer
-from validation import Number, normalise
+from src.data_holder import Data, DataContainer
+from src.validation import Number, normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 
 def filter_columns(raw_data: list, columns_to_filter):
     logging.debug(f'Checking {raw_data = }\nand filtering based on {columns_to_filter}')
@@ -16,6 +17,7 @@ def filter_columns(raw_data: list, columns_to_filter):
 def construct_datacontainer(raw_data: list, columns: Data):
     data = []
     for r in raw_data:
+        print(r)
         row = {col: r[col] for col in columns._columns.keys()}
         data.append(columns(**row))
     return DataContainer(data)
@@ -48,7 +50,6 @@ def reading(filepath: str, columns):
         "columns": columns,
         "type": os.path.splitext(filepath)[1],
         })
-
 
 
 def reading_data(filepath: str, columns: Data):
