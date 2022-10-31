@@ -1,7 +1,7 @@
 import csv
 import os
 import logging
-from src.data_holder import Data, DataContainer
+from src.data_container import Data, DataContainer
 from src.validation import Number, normalise
 
 logging.basicConfig(level=logging.DEBUG, filename='app.log', filemode='w', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
