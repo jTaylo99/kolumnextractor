@@ -3,8 +3,18 @@ from src import config_parameters
 from dateutil.parser import parse
 from re import sub
 
-
 def date_normalizer(date_input):
+    """
+        date_normalizer
+
+    Converts date input into a consistent date format of datetime.date
+
+    Args:
+        date_input: date to be converted.
+
+    Returns:
+        A dt.date object converted from the input date.
+    """
     supported_types = [dt.datetime, dt.date, str, int]
 
     if type(date_input) not in supported_types:
